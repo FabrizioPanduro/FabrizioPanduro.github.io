@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
-<style>.titulo { color: #1f6feb; }</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabrizio Panduro</title>
+    <title>Fabrizio Panduro | Portafolio</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1 class="titulo">Fabrizio Panduro · Ingeniería Informática</h1>
-        <p>Estudiante de Ingeniería Informática · Universidad Ricardo Palma</p>
-    </header>
-    <main>
-        <section id="sobre-mi">
-            <h2>Sobre mí</h2>
-            <p>
-                Soy estudiante de Ingeniería Informática apasionado por la automatización y el desarrollo web. 
-                Disfruto creando soluciones tecnológicas, desde sistemas de gestión de información hasta simuladores interactivos 
-                que optimizan procesos.
-            </p>
+    <main class="contenedor">
+        <!-- Encabezado con tu foto -->
+        <header class="perfil-header">
+            <div class="foto-contenedor">
+                <!-- Asegúrate de que el nombre aquí coincida exactamente con tu archivo de imagen -->
+                <img src="foto-perfil.jpg" alt="Foto de Fabrizio Panduro" class="foto-perfil">
+            </div>
+            <h1>¡Hola! Soy Fabrizio 👋</h1>
+            <h2 class="subtitulo">Ingeniería Informática (10mo ciclo) · Universidad Ricardo Palma</h2>
+            <p class="tagline">Apasionado por la tecnología, la automatización y la optimización de procesos.</p>
+        </header>
+
+        <!-- Sección Sobre mí y Experiencia fusionada y más conversacional -->
+        <section class="tarjeta info-principal">
+            <h3>¿Qué hago?</h3>
+            <p>Actualmente me desempeño como <strong>Practicante de Gestión de Proyectos en BBVA</strong>, evolucionando desde mi rol anterior en Transformación de Procesos. Me especializo en metodologías ágiles, bases de datos y desarrollo web para crear soluciones que realmente impacten.</p>
+            
+            <div class="enlaces-contacto">
+                <a href="mailto:fabriziopanduro@gmail.com" class="btn">✉️ Escríbeme</a>
+                <a href="https://www.linkedin.com/in/fabrizio-panduro/" target="_blank" class="btn btn-outline">LinkedIn</a>
+                <a href="https://github.com/FabrizioPanduro" target="_blank" class="btn btn-outline">GitHub</a>
+            </div>
         </section>
-        <section id="habilidades">
-            <h2>Habilidades y Herramientas</h2>
-            <ul>
-                <li>Desarrollo Web: HTML, CSS, JavaScript</li>
-                <li>Automatización: Google Apps Script, UiPath</li>
-                <li>Metodologías Ágiles y Gestión: Kanban, Jira</li>
-                <li>Control de Versiones: Git y GitHub</li>
-            </ul>
-        </section>
-        <section id="contacto">
-            <h2>Contacto</h2>
-            <p>
-                <a href="mailto:202012303@urp.edu.pe">Correo Institucional</a> | 
-                <a href="https://github.com/FabrizioPanduro">Perfil de GitHub</a>
-            </p>
-        </section>
-        <section id="proyectos">
-            <h2>Proyectos</h2>
-            <ul>
-                <li><strong>Sistema de Gestión Web:</strong> Desarrollo de módulos de cliente y administración para Del Castillo Eventos, gestionado mediante metodologías ágiles en 4 sprints.</li>
-                <li><strong>Automatización RPA:</strong> Flujo automatizado en UiPath Studio para la descarga y distribución de reportes vía correo electrónico.</li>
-                <li><strong>Simuladores BBVA:</strong> Entornos simulados de plataformas reales del banco BBVA para entrenamiento a sus Asesores.</li>
-                <li><strong>Mi Perfil (Este sitio):</strong> Página web personal construida y desplegada automáticamente usando Git y GitHub Pages.</li>
-            </ul>
+
+        <!-- Habilidades más visuales -->
+        <section class="tarjeta habilidades">
+            <h3>Stack Tecnológico</h3>
+            <div class="etiquetas">
+                <span>HTML/CSS/JS</span>
+                <span>Python & Java</span>
+                <span>SQL & MongoDB</span>
+                <span>Google Apps Script</span>
+                <span>Scrum & Kanban</span>
+            </div>
         </section>
     </main>
+
     <footer>
-        <p>Hecho con Git y GitHub Pages · IF-1116 · 2026-II</p>
+        <p>2026 - 2</p>
     </footer>
 </body>
 </html>
