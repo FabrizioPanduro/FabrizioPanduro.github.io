@@ -1,7 +1,8 @@
 services:
   db:
     # Usamos la imagen oficial de PostgreSQL (etiqueta fija)
-    image: postgres:16-alpine
+    build:
+      context: ./db
     restart: always
     environment:
       - POSTGRES_USER
