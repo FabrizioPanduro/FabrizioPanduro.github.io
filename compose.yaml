@@ -36,8 +36,10 @@ services:
         condition: service_healthy
     # Reto 4: La API es el puente, se conecta a ambas redes
     networks:
-      - frontend
-      - backend
+      frontend:
+        aliases:
+          - apifrontend
+      backend:
   
   web:
     build:
