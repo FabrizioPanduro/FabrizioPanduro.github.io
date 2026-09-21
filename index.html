@@ -44,8 +44,27 @@
         </section>
     </main>
 
+    <!-- ═══════════ LIBRO DE VISITAS (LAB-02) ═══════════ -->
+        <section id="libro-de-visitas" class="tarjeta" hidden>
+            <h3>Libro de visitas</h3>
+            <form id="form-mensaje" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                <label style="font-weight: 500;">Tu nombre
+                    <input name="nombre" maxlength="60" required style="width: 100%; padding: 0.5rem; margin-top: 0.3rem; border: 1px solid #cbd5e0; border-radius: 8px;">
+                </label>
+                <label style="font-weight: 500;">Tu mensaje
+                    <textarea name="mensaje" maxlength="280" rows="3" required style="width: 100%; padding: 0.5rem; margin-top: 0.3rem; border: 1px solid #cbd5e0; border-radius: 8px; resize: vertical;"></textarea>
+                </label>
+                <button type="submit" class="btn" style="width: fit-content;">Dejar mensaje</button>
+                <p id="form-estado" role="status" style="font-size: 0.9rem; color: #718096;"></p>
+            </form>
+
+            <ul id="lista-mensajes" style="margin-top: 2rem; padding-left: 0; list-style: none;"></ul>
+        </section>
+
     <footer>
         <p>2026 - 2</p>
     </footer>
+    
+<script src="libro-de-visitas.js" defer></script>
 </body>
 </html>
