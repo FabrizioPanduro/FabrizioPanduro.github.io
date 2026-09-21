@@ -3,8 +3,10 @@ services:
     # Usamos la imagen oficial de PostgreSQL (etiqueta fija)
     image: postgres:16-alpine
     restart: always
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     # B2: Persistencia de datos mediante un volumen
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -22,8 +24,11 @@ services:
     build:
       context: ./api
     restart: always
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - DB_HOST
     # Reto 2: La API espera a que el healthcheck de la BD diga "healthy"
     depends_on:
       db:
@@ -32,6 +37,21 @@ services:
     networks:
       - frontend
       - backend
+  
+  web:
+    build:
+      # El contexto es la raíz para que pueda ver el index.html
+      context: .
+      dockerfile: web/Dockerfile
+    restart: always
+    # Exponemos el puerto 8080 hacia tu computadora
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api
+    # Reto 4: Web solo pertenece a la red frontend, no puede ver a la base de datos
+    networks:
+      - frontend
 
 # Declaramos el volumen para que los mensajes persistan
 volumes:

@@ -1,0 +1,25 @@
+{
+  "name": "Laboratorio 02 - Fabrizio",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  
+  "features": {
+    // Instala Docker dentro del Codespace para que puedas usar compose
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  // Diferencia clave: postStartCommand corre cada vez que el Codespace se reanuda o inicia.
+  // postCreateCommand solo corre la primera vez que se construye.
+  // Queremos asegurarnos de que los servicios siempre levanten al abrir el entorno.
+  "postStartCommand": "docker compose up -d",
+
+  // Le decimos a Codespaces qué puerto debe exponer hacia internet
+  "forwardPorts": [8080],
+
+  // Configuramos el puerto para que abra automáticamente una pestaña en tu navegador
+  "portsAttributes": {
+    "8080": {
+      "label": "Perfil Web",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}
