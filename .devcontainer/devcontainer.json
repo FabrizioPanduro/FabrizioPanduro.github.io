@@ -2,7 +2,9 @@
   "name": "Laboratorio 02 - Fabrizio",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
   },
   "postStartCommand": "docker compose up -d",
   "forwardPorts": [8080],
