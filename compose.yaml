@@ -1,0 +1,43 @@
+services:
+  db:
+    # Usamos la imagen oficial de PostgreSQL (etiqueta fija)
+    image: postgres:16-alpine
+    restart: always
+    env_file:
+      - .env
+    # B2: Persistencia de datos mediante un volumen
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Reto 2: Control de salud para saber cuándo la BD está realmente lista
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Reto 4: La BD solo vive en la red interna (roja)
+    networks:
+      - backend
+
+  api:
+    build:
+      context: ./api
+    restart: always
+    env_file:
+      - .env
+    # Reto 2: La API espera a que el healthcheck de la BD diga "healthy"
+    depends_on:
+      db:
+        condition: service_healthy
+    # Reto 4: La API es el puente, se conecta a ambas redes
+    networks:
+      - frontend
+      - backend
+
+# Declaramos el volumen para que los mensajes persistan
+volumes:
+  pgdata:
+
+# Reto 4: Red segmentada (Nadie desde afuera puede tocar el backend)
+networks:
+  frontend:
+  backend:
