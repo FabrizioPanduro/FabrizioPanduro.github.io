@@ -26,10 +26,10 @@ services:
       context: ./api
     restart: always
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - DB_HOST
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_HOST=${DB_HOST}
     # Reto 2: La API espera a que el healthcheck de la BD diga "healthy"
     depends_on:
       db:
