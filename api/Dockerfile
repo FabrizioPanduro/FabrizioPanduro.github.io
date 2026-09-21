@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalamos solo las dependencias de producción
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # ==========================================
 # Etapa 2: Producción (Runner) - RETO 1 (Imagen Mínima)
