@@ -102,7 +102,8 @@ jobs:
       - name: Construir y publicar imagen WEB
         uses: docker/build-push-action@v5
         with:
-          context: ./web
+          context: .
+          file: ./web/Dockerfile
           push: true
           tags: ${{ steps.meta_web.outputs.tags }}
           labels: ${{ steps.meta_web.outputs.labels }}
@@ -118,7 +119,8 @@ jobs:
       - name: Construir y publicar imagen API
         uses: docker/build-push-action@v5
         with:
-          context: ./api
+          context: .
+          file: ./api/Dockerfile
           push: true
           tags: ${{ steps.meta_api.outputs.tags }}
           labels: ${{ steps.meta_api.outputs.labels }}
