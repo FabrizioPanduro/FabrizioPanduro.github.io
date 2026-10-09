@@ -36,7 +36,9 @@ jobs:
 
       - name: Linter 3 - Hadolint (Dockerfiles)
         run: |
-          docker run --rm -v "$PWD:/work" -w /work hadolint/hadolint hadolint api/Dockerfile web/Dockerfile db/Dockerfile
+          wget -qO hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          chmod +x hadolint
+          ./hadolint api/Dockerfile web/Dockerfile db/Dockerfile
 
       - name: Armar el artefacto del sitio público
         run: |
