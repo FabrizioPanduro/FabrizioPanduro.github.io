@@ -50,3 +50,26 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site/
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias exactas
+        run: npm ci
+
+      - name: Armar el sitio para las pruebas
+        run: |
+          mkdir -p _site
+          cp index.html libro-de-visitas.js style.css Foto-Perfil-CV.jpeg _site/ || true
+
+      - name: Ejecutar Vitest
+        run: npm test
