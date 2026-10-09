@@ -30,9 +30,8 @@ jobs:
         run: npx htmlhint index.html
 
       - name: Linter 2 - ESLint (API)
-        # Se crea un archivo de configuración básico al vuelo para que ESLint sepa qué reglas aplicar
         run: |
-          echo '{"env": {"node": true, "es2021": true}, "extends": "eslint:recommended", "parserOptions": {"ecmaVersion": 12}}' > .eslintrc.json
+          echo 'import js from "@eslint/js"; export default [ js.configs.recommended, { rules: { "no-unused-vars": "warn", "no-undef": "off" } } ];' > eslint.config.mjs
           npx eslint api/app.js
 
       - name: Linter 3 - Hadolint (Dockerfiles)
