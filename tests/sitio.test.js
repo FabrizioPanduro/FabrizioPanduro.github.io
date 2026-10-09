@@ -54,10 +54,10 @@ describe('Pruebas personalizadas (B3)', () => {
   })
 
   it('la sección del libro de visitas existe con sus campos', () => {
-    // Asumiendo que tus inputs tienen id="nombre" e id="mensaje"
-    expect(doc.querySelector('#nombre')).not.toBeNull()
-    expect(doc.querySelector('#mensaje')).not.toBeNull()
-  })
+        // Usamos corchetes para buscar por el atributo 'name' tal como está en tu HTML
+        expect(doc.querySelector('[name="nombre"]')).not.toBeNull()
+        expect(doc.querySelector('[name="mensaje"]')).not.toBeNull()
+      })
 
   it('el sitio no apunta a localhost', () => {
     const links = [...doc.querySelectorAll('a, form')]
