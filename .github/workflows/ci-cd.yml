@@ -24,7 +24,7 @@ jobs:
       - name: Instalar Linters (HTMLHint y ESLint)
         run: |
           npm init -y
-          npm install eslint htmlhint --save-dev
+          npm install eslint htmlhint @eslint/js --save-dev
 
       - name: Linter 1 - HTMLHint (Páginas estáticas)
         run: npx htmlhint index.html
