@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Instalar Linters (HTMLHint y ESLint)
         run: |
@@ -64,6 +65,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Instalar dependencias exactas
         run: npm ci
@@ -109,6 +111,8 @@ jobs:
           push: true
           tags: ${{ steps.meta_web.outputs.tags }}
           labels: ${{ steps.meta_web.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Extraer metadatos para la imagen API
         id: meta_api
@@ -125,6 +129,8 @@ jobs:
           push: true
           tags: ${{ steps.meta_api.outputs.tags }}
           labels: ${{ steps.meta_api.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   security:
     needs: package
@@ -141,18 +147,34 @@ jobs:
         with:
           image-ref: ghcr.io/${{ steps.vars.outputs.repo }}/perfil-web:sha-${{ steps.vars.outputs.short }}
           format: 'table'
+          output: 'trivy-web.txt'
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL'
 
       - name: Escanear imagen API con Trivy
+        if: always()
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ghcr.io/${{ steps.vars.outputs.repo }}/perfil-api:sha-${{ steps.vars.outputs.short }}
           format: 'table'
+          output: 'trivy-api.txt'
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL'
+
+      - name: Publicar resumen en GitHub
+        if: always()
+        run: |
+          echo "## 🛡️ Reporte de Seguridad (Trivy)" >> $GITHUB_STEP_SUMMARY
+          echo "### Imagen WEB" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat trivy-web.txt >> $GITHUB_STEP_SUMMARY || echo "No se generó reporte" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "### Imagen API" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat trivy-api.txt >> $GITHUB_STEP_SUMMARY || echo "No se generó reporte" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
   smoke:
     needs: security

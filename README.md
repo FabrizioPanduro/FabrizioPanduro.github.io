@@ -12,3 +12,5 @@ Cada push a `main` despliega automáticamente con GitHub Pages.
 
 ## Historial del curso
 - **S02** — Sitio inicial, ramas y pull requests
+
+[![CI/CD](https://github.com/FabrizioPanduro/FabrizioPanduro.github.io/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/FabrizioPanduro/FabrizioPanduro.github.io/actions/workflows/ci-cd.yml)
