@@ -119,8 +119,7 @@ jobs:
       - name: Construir y publicar imagen API
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./api/Dockerfile
+          context: ./api
           push: true
           tags: ${{ steps.meta_api.outputs.tags }}
           labels: ${{ steps.meta_api.outputs.labels }}
