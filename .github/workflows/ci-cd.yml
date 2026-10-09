@@ -1,0 +1,55 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar Linters (HTMLHint y ESLint)
+        run: |
+          npm init -y
+          npm install eslint htmlhint --save-dev
+
+      - name: Linter 1 - HTMLHint (Páginas estáticas)
+        run: npx htmlhint index.html
+
+      - name: Linter 2 - ESLint (API)
+        # Se crea un archivo de configuración básico al vuelo para que ESLint sepa qué reglas aplicar
+        run: |
+          echo '{"env": {"node": true, "es2021": true}, "extends": "eslint:recommended", "parserOptions": {"ecmaVersion": 12}}' > .eslintrc.json
+          npx eslint api/app.js
+
+      - name: Linter 3 - Hadolint (Dockerfiles)
+        run: |
+          docker run --rm -i hadolint/hadolint < api/Dockerfile
+          docker run --rm -i hadolint/hadolint < web/Dockerfile
+          docker run --rm -i hadolint/hadolint < db/Dockerfile
+
+      - name: Armar el artefacto del sitio público
+        run: |
+          mkdir _site
+          cp index.html _site/
+          cp libro-de-visitas.js _site/
+          cp style.css _site/
+          cp Foto-Perfil-CV.jpeg _site/ || true 
+
+      - name: Subir artefacto a GitHub
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
