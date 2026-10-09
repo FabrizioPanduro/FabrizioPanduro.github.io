@@ -1,0 +1,3 @@
+# Ignoramos DL3066 porque en el LAB-02 configuramos usuarios por nombre (ej. USER node) en lugar de IDs numéricos.
+ignored:
+  - DL3066

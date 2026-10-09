@@ -1,0 +1,209 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar Linters (HTMLHint y ESLint)
+        run: |
+          npm init -y
+          npm install eslint htmlhint @eslint/js --save-dev
+
+      - name: Linter 1 - HTMLHint (Páginas estáticas)
+        run: npx htmlhint index.html
+
+      - name: Linter 2 - ESLint (API)
+        run: |
+          echo 'import js from "@eslint/js"; export default [ js.configs.recommended, { rules: { "no-unused-vars": "warn", "no-undef": "off" } } ];' > eslint.config.mjs
+          npx eslint api/app.js
+
+      - name: Linter 3 - Hadolint (Dockerfiles)
+        run: |
+          wget -qO hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          chmod +x hadolint
+          ./hadolint api/Dockerfile web/Dockerfile db/Dockerfile
+
+      - name: Armar el artefacto del sitio público
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp libro-de-visitas.js _site/
+          cp style.css _site/
+          cp Foto-Perfil-CV.jpeg _site/ || true
+
+      - name: Subir artefacto a GitHub
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias exactas
+        run: npm ci
+
+      - name: Armar el sitio para las pruebas
+        run: |
+          mkdir -p _site
+          cp index.html libro-de-visitas.js style.css Foto-Perfil-CV.jpeg _site/ || true
+
+      - name: Ejecutar Vitest
+        run: npm test
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Iniciar sesión en GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extraer metadatos para la imagen WEB
+        id: meta_web
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/perfil-web
+          tags: |
+            type=sha,format=short
+
+      - name: Construir y publicar imagen WEB
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./web/Dockerfile
+          push: true
+          tags: ${{ steps.meta_web.outputs.tags }}
+          labels: ${{ steps.meta_web.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extraer metadatos para la imagen API
+        id: meta_api
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/perfil-api
+          tags: |
+            type=sha,format=short
+
+      - name: Construir y publicar imagen API
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          push: true
+          tags: ${{ steps.meta_api.outputs.tags }}
+          labels: ${{ steps.meta_api.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  security:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraer variables (SHA y repo en minúsculas)
+        id: vars
+        run: |
+          echo "short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+
+      - name: Escanear imagen WEB con Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/${{ steps.vars.outputs.repo }}/perfil-web:sha-${{ steps.vars.outputs.short }}
+          format: 'table'
+          output: 'trivy-web.txt'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL'
+
+      - name: Escanear imagen API con Trivy
+        if: always()
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/${{ steps.vars.outputs.repo }}/perfil-api:sha-${{ steps.vars.outputs.short }}
+          format: 'table'
+          output: 'trivy-api.txt'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL'
+
+      - name: Publicar resumen en GitHub
+        if: always()
+        run: |
+          echo "## 🛡️ Reporte de Seguridad (Trivy)" >> $GITHUB_STEP_SUMMARY
+          echo "### Imagen WEB" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat trivy-web.txt >> $GITHUB_STEP_SUMMARY || echo "No se generó reporte" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "### Imagen API" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat trivy-api.txt >> $GITHUB_STEP_SUMMARY || echo "No se generó reporte" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  smoke:
+    needs: security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraer variables (SHA y repo en minúsculas)
+        id: vars
+        run: |
+          echo "short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          echo "repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+
+      - name: Iniciar sesión en GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Levantar contenedor WEB
+        run: |
+          docker run -d -p 8080:8080 --name web-smoke ghcr.io/${{ steps.vars.outputs.repo }}/perfil-web:sha-${{ steps.vars.outputs.short }}
+          sleep 5 
+
+      - name: Smoke test (HTTP 200 y nombre)
+        run: |
+          curl -s -i http://localhost:8080 > response.txt
+          grep -q "HTTP/1.1 200 OK" response.txt || (echo "Error: No respondió con 200 OK" && exit 1)
+          grep -q "Fabrizio" response.txt || (echo "Error: No se encontró tu nombre en el HTML" && exit 1)
+          echo "Smoke test exitoso."

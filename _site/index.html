@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabrizio Panduro | Portafolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="contenedor">
+        <!-- Encabezado con tu foto -->
+        <header class="perfil-header">
+            <div class="foto-contenedor">
+                <!-- Asegúrate de que el nombre aquí coincida exactamente con tu archivo de imagen -->
+                <img src="Foto-Perfil-CV.jpeg" alt="Foto de Fabrizio Panduro" class="foto-perfil">
+            </div>
+            <h1>¡Hola! Soy Fabrizio 👋</h1>
+            <h2 class="subtitulo">Ingeniería Informática (10mo ciclo) · Universidad Ricardo Palma</h2>
+            <p class="tagline">Apasionado por la tecnología, la automatización y la optimización de procesos.</p>
+        </header>
+
+        <!-- Sección Sobre mí y Experiencia fusionada y más conversacional -->
+        <section class="tarjeta info-principal">
+            <h3>¿Qué hago?</h3>
+            <p>Actualmente me desempeño como <strong>Practicante de Gestión de Proyectos en BBVA</strong>, evolucionando desde mi rol anterior en Transformación de Procesos. Me especializo en metodologías ágiles, bases de datos y desarrollo web para crear soluciones que realmente impacten.</p>
+            
+            <div class="enlaces-contacto">
+                <a href="mailto:fabriziopanduro@gmail.com" class="btn">✉️ Escríbeme</a>
+                <a href="https://www.linkedin.com/in/fabrizio-panduro/" target="_blank" class="btn btn-outline">LinkedIn</a>
+                <a href="https://github.com/FabrizioPanduro" target="_blank" class="btn btn-outline">GitHub</a>
+            </div>
+        </section>
+
+        <!-- Habilidades más visuales -->
+        <section class="tarjeta habilidades">
+            <h3>Stack Tecnológico</h3>
+            <div class="etiquetas">
+                <span>HTML/CSS/JS</span>
+                <span>Python & Java</span>
+                <span>SQL & MongoDB</span>
+                <span>Google Apps Script</span>
+                <span>Scrum & Kanban</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════ LIBRO DE VISITAS (LAB-02) ═══════════ -->
+        <section id="libro-de-visitas" class="tarjeta" hidden>
+            <h3>Libro de visitas</h3>
+            <form id="form-mensaje" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                <label style="font-weight: 500;">Tu nombre
+                    <input name="nombre" maxlength="60" required style="width: 100%; padding: 0.5rem; margin-top: 0.3rem; border: 1px solid #cbd5e0; border-radius: 8px;">
+                </label>
+                <label style="font-weight: 500;">Tu mensaje
+                    <textarea name="mensaje" maxlength="280" rows="3" required style="width: 100%; padding: 0.5rem; margin-top: 0.3rem; border: 1px solid #cbd5e0; border-radius: 8px; resize: vertical;"></textarea>
+                </label>
+                <button type="submit" class="btn" style="width: fit-content;">Dejar mensaje</button>
+                <p id="form-estado" role="status" style="font-size: 0.9rem; color: #718096;"></p>
+            </form>
+
+            <ul id="lista-mensajes" style="margin-top: 2rem; padding-left: 0; list-style: none;"></ul>
+        </section>
+
+    <footer>
+        <p>2026 - 2</p>
+    </footer>
+    
+<script src="libro-de-visitas.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+:root {
+    --fondo: #f0f4f8;
+    --texto: #2d3748;
+    --tarjeta: #ffffff;
+    --primario: #3182ce;
+    --primario-hover: #2b6cb0;
+    --etiqueta-bg: #e2e8f0;
+    --radio: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--fondo);
+    color: var(--texto);
+    margin: 0;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+}
+
+.contenedor {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Cabecera y Foto */
+.perfil-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.foto-contenedor {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 1.5rem auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--tarjeta);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.foto-perfil {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ajusta el enfoque de la foto hacia arriba para que no te corte la cara */
+    object-position: center top; 
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+}
+
+.subtitulo {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primario);
+    margin: 0 0 0.5rem 0;
+}
+
+.tagline {
+    color: #718096;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Tarjetas */
+.tarjeta {
+    background: var(--tarjeta);
+    padding: 2rem;
+    border-radius: var(--radio);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    border-bottom: 2px solid var(--fondo);
+    padding-bottom: 0.5rem;
+}
+
+/* Botones de contacto */
+.enlaces-contacto {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primario);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--primario-hover);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--primario);
+    border: 2px solid var(--primario);
+}
+
+.btn-outline:hover {
+    background-color: var(--primario);
+    color: white;
+}
+
+/* Etiquetas de habilidades */
+.etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.etiquetas span {
+    background-color: var(--etiqueta-bg);
+    color: var(--texto);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+footer {
+    text-align: center;
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+}
